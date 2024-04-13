@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Основная страница</h1>
+{% for item in lessons%}
+<div class="col-md6 border rounded">
+    <h2>{{item.name}}</h2>
+</div>
+{% endfor %}
+{% endblock %}
