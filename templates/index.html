@@ -1,10 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Основная страница</h1>
-{% for item in lessons%}
-<div class="col-md6 border rounded">
-    <h2>{{item.name}}</h2>
+<h1>Список уроков</h1>
+<div class="row">
+  {% for item in lessons %}
+    {% if loop.first %}
+      <div class="col-sm-6 mb-3 mb-sm-0">
+    {% else %}
+      <div class="col-sm-6">
+    {% endif %}
+        <div class="card w-50">
+          <div class="card-body">
+            <h5 class="card-title">{{item.name}}</h5>
+            <p class="card-text">{{item.description}}</p>
+            <a href="/lesson/{{item.id}}" class="btn btn-primary">Перейти</a>
+          </div>
+          <img src="data:;base64, {{pict[loop.index0]}}" class="card-img-bottom" alt="...">
+        </div>
+      </div>
+  {% endfor %}
 </div>
-{% endfor %}
 {% endblock %}

@@ -1,3 +1,4 @@
+import base64
 from flask import Flask
 from flask import redirect
 from flask import render_template
@@ -15,7 +16,7 @@ from data.languages import Language
 from forms.loginform import LoginForm
 from forms.user import RegisterForm
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="/static")
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -36,12 +37,28 @@ def index():
             (Lesson.who_done == current_user.id) | (Lesson.is_open == True))
     else:
         lessons = db_sess.query(Lesson).filter(Lesson.is_open == True)
-    return render_template("index.html", lessons=lessons)
+    pict = list()
+    for i in lessons:
+        pict.append(base64.b64encode(i.picture).decode('ascii'))
+    return render_template("index.html", lessons=lessons, pict=pict)
+
+
+@app.route('/lesson/<lesson_id>')
+def lesson(lesson_id):
+    db_sess = db_session.create_session()
+    cards = db_sess.query(Card).filter((Card.lesson_id == lesson_id))
+    return render_template("lesson.html", cards=cards)
 
 
 @app.route('/profile')
 def profile():
-    return render_template("profile.html")
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter((User.id == current_user.is_authenticated)).first()
+    if user.picture is not None:
+        picture = base64.b64encode(user.picture).decode('ascii')
+    else:
+        picture = None
+    return render_template("profile.html", user=user, picture=picture)
 
 
 @app.route('/register', methods=['GET', 'POST'])

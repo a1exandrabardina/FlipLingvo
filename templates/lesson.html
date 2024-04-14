@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+  {% for item in cards %}
+    {% if loop.first %}
+      <div class="col-sm-6 mb-3 mb-sm-0">
+    {% else %}
+      <div class="col-sm-6">
+    {% endif %}
+        <div class="card text-bg-dark w-50">
+          <img src="/static/images/Rectangle_yellow.jpg" class="card-img" alt="...">
+          <div class="card-img-overlay">
+            <h5 class="card-title">{{item.word}}</h5>
+          </div>
+        </div>
+      </div>
+  {% endfor %}
+</div>
+{% endblock %}
