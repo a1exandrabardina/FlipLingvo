@@ -1,4 +1,5 @@
 import base64
+import os
 from flask import Flask
 from flask import redirect
 from flask import render_template
@@ -15,6 +16,9 @@ from data.cards import Card
 from data.languages import Language
 from forms.loginform import LoginForm
 from forms.user import RegisterForm
+from forms.changingimage import ChangeImageForm
+from forms.changingpassword import ChangingPasswordForm
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__, static_url_path="/static")
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -99,6 +103,42 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/changingpassword', methods=['GET', 'POST'])
+def changingpassword():
+    form = ChangingPasswordForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter((User.id == current_user.is_authenticated)).first()
+        if user.check_password(form.last_password.data):
+            if form.new_password.data != form.confirm_password.data:
+                return render_template('changingpassword.html', title='Регистрация',
+                                       form=form,
+                                       message="Пароли не совпадают")
+            user.set_password(form.new_password.data)
+            db_sess.commit()
+            return redirect("/")
+        return render_template('changingpassword.html',
+                               message="Неправильный пароль",
+                               form=form)
+    return render_template('changingpassword.html', title='Авторизация', form=form)
+
+
+@app.route('/changingimage', methods=['GET', 'POST'])
+def changingimage():
+    form = ChangeImageForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter((User.id == current_user.is_authenticated)).first()
+        f = form.picture.data
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(app.instance_path, filename))
+        image = open(os.path.join(app.instance_path, filename), 'rb')
+        user.picture = image.read()
+        db_sess.commit()
+        return redirect("/")
+    return render_template('changingimage.html', title='Смена Изображения', form=form)
 
 
 @app.route('/logout')

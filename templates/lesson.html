@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script type="text/javascript">
+  function turn(imageid)
+  {
+  document.getElementById(imageid).src = "/static/images/default.jpg"
+  }
+</script>
 <div class="row">
   {% for item in cards %}
     {% if loop.first %}
@@ -9,7 +15,7 @@
       <div class="col-sm-6">
     {% endif %}
         <div class="card text-bg-dark w-50">
-          <img src="/static/images/Rectangle_yellow.jpg" class="card-img" alt="...">
+          <img src="/static/images/Rectangle_yellow.jpg" class="card-img" alt="..." id="{{loop.index0}}" onclick="turn(loop.index0)">
           <div class="card-img-overlay">
             <h5 class="card-title">{{item.word}}</h5>
           </div>
