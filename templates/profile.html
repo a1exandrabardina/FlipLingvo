@@ -3,9 +3,9 @@
 {% block content %}
     <h1>Профиль</h1>
     {% if picture != None %}
-    <img src="data:;base64, {{picture}}">
+    <img src="/static/profile/{{user.picture}}">
     {% else %}
-    <img src="/static/images/default.jpg">
+    <img src="/static/profile/default.jpg">
     {% endif %}
     <div class="alert alert-primary w-50" role="alert">Имя пользователя: {{user.name}}</div>
     <div class="alert alert-primary w-50" role="alert">Email: {{user.email}}</div>

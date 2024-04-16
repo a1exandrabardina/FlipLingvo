@@ -15,7 +15,7 @@
             <p class="card-text">{{item.description}}</p>
             <a href="/lesson/{{item.id}}" class="btn btn-primary">Перейти</a>
           </div>
-          <img src="data:;base64, {{pict[loop.index0]}}" class="card-img-bottom" alt="...">
+          <img src="/static/images/{{item.picture}}.png" class="card-img-bottom" alt="...">
         </div>
       </div>
   {% endfor %}

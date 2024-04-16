@@ -41,10 +41,7 @@ def index():
             (Lesson.who_done == current_user.id) | (Lesson.is_open == True))
     else:
         lessons = db_sess.query(Lesson).filter(Lesson.is_open == True)
-    pict = list()
-    for i in lessons:
-        pict.append(base64.b64encode(i.picture).decode('ascii'))
-    return render_template("index.html", lessons=lessons, pict=pict)
+    return render_template("index.html", lessons=lessons)
 
 
 @app.route('/lesson/<lesson_id>')
@@ -58,11 +55,7 @@ def lesson(lesson_id):
 def profile():
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter((User.id == current_user.is_authenticated)).first()
-    if user.picture is not None:
-        picture = base64.b64encode(user.picture).decode('ascii')
-    else:
-        picture = None
-    return render_template("profile.html", user=user, picture=picture)
+    return render_template("profile.html", user=user)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -118,7 +111,7 @@ def changingpassword():
                                        message="Пароли не совпадают")
             user.set_password(form.new_password.data)
             db_sess.commit()
-            return redirect("/")
+            return redirect("/profile")
         return render_template('changingpassword.html',
                                message="Неправильный пароль",
                                form=form)
@@ -133,11 +126,10 @@ def changingimage():
         user = db_sess.query(User).filter((User.id == current_user.is_authenticated)).first()
         f = form.picture.data
         filename = secure_filename(f.filename)
-        f.save(os.path.join(app.instance_path, filename))
-        image = open(os.path.join(app.instance_path, filename), 'rb')
-        user.picture = image.read()
+        f.save(os.path.join("C:\\\\Users\\\\dingo\\\\PycharmProjects\\\\REALPROJECT", "static", "profile", filename))
+        user.picture = filename
         db_sess.commit()
-        return redirect("/")
+        return redirect("/profile")
     return render_template('changingimage.html', title='Смена Изображения', form=form)
 
 

@@ -10,6 +10,6 @@ class Lesson(SqlAlchemyBase):
     language_1 = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("languages.id"))
     language_2 = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("languages.id"))
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    picture = sqlalchemy.Column(sqlalchemy.BLOB, nullable=True, default=None)
+    picture = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="pink")
     who_done = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     is_open = sqlalchemy.Column(sqlalchemy.Boolean, nullable=True)

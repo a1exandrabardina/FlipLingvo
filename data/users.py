@@ -13,7 +13,7 @@ class User(SqlAlchemyBase, UserMixin):
     password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     about = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     email = sqlalchemy.Column(sqlalchemy.String, index=True, nullable=True)
-    picture = sqlalchemy.Column(sqlalchemy.BLOB, nullable=True, default=None)
+    picture = sqlalchemy.Column(sqlalchemy.String, nullable=True, default="default.jpg")
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
     def set_password(self, password):
