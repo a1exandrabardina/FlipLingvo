@@ -3,22 +3,26 @@
 {% block content %}
 
 <script language="JavaScript">
-  function turn(card_id)
+  function turn(card_id, word, definition, translate)
   {
     if (document.getElementById(card_id).getElementsByTagName("img")[0].src == "http://127.0.0.1:8080/static/images/cards/1.png")
     {
       document.getElementById(card_id).getElementsByTagName("img")[0].src = "/static/images/cards/2.png";
+      document.getElementById(card_id).getElementsByTagName("div")[0].getElementsByTagName("h3")[0].textContent = definition;
     }
     else if (document.getElementById(card_id).getElementsByTagName("img")[0].src == "http://127.0.0.1:8080/static/images/cards/2.png")
     {
       document.getElementById(card_id).getElementsByTagName("img")[0].src = "/static/images/cards/3.png";
+      document.getElementById(card_id).getElementsByTagName("div")[0].getElementsByTagName("h3")[0].textContent = translate;
     }
     else if (document.getElementById(card_id).getElementsByTagName("img")[0].src == "http://127.0.0.1:8080/static/images/cards/3.png")
     {
       document.getElementById(card_id).getElementsByTagName("img")[0].src = "/static/images/cards/1.png";
+      document.getElementById(card_id).getElementsByTagName("div")[0].getElementsByTagName("h3")[0].textContent = word;
     }
   }
 </script>
+<a class="btn btn-warning" href="/"><--Назад</a>
 <div class="row">
   {% for item in cards %}
     {% if loop.first %}
@@ -26,10 +30,10 @@
     {% else %}
       <div class="col-sm-6">
     {% endif %}
-        <div class="card text-bg-dark w-50" id="{{loop.index0}}" onclick="turn({{loop.index0}});">
+        <div class="card text-bg-dark w-50" id="{{loop.index0}}" onclick="turn({{loop.index0}}, &quot;{{item.word}}&quot;, &quot;{{item.definition}}&quot;, &quot;{{item.translate}}&quot;);">
           <img src="/static/images/cards/1.png" class="card-img" alt="...">
-          <div class="card-img-overlay d-flex align-item-center justify-context-center">
-            <h5 class="card-title">{{item.word}}</h5>
+          <div class="card-img-overlay d-flex flex-column align-items-center justify-content-center">
+            <h3 class="card-title">{{item.word}}</h3>
           </div>
         </div>
       </div>

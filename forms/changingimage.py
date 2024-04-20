@@ -6,4 +6,4 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 class ChangeImageForm(FlaskForm):
     picture = FileField('Новая картинка', validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])
-    submit = SubmitField('Войти')
+    submit = SubmitField('Подтвердить')

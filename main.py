@@ -16,6 +16,7 @@ from data.cards import Card
 from data.languages import Language
 from forms.loginform import LoginForm
 from forms.user import RegisterForm
+from forms.filters import FilterForm
 from forms.changingimage import ChangeImageForm
 from forms.changingpassword import ChangingPasswordForm
 from werkzeug.utils import secure_filename
@@ -32,21 +33,47 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-@app.route('/')
-@app.route('/index')
-def index():
+@app.route('/', defaults={'language_filter': 'Все', 'search_word': '%'}, methods=['GET', 'POST'])
+@app.route('/index', defaults={'language_filter': 'Все', 'search_word': ''}, methods=['GET', 'POST'])
+@app.route('/index/<language_filter>/<search_word>', methods=['GET', 'POST'])
+def index(language_filter, search_word):
     db_sess = db_session.create_session()
+    languages = db_sess.query(Language)
+    form = FilterForm(languages)
+    form.language_filter.choices = [("Все", "Все"), *[(lan.id, lan.name) for lan in languages]]
     if current_user.is_authenticated:
-        lessons = db_sess.query(Lesson).filter(
-            (Lesson.who_done == current_user.id) | (Lesson.is_open == True))
+        if language_filter != 'Все':
+            lessons = db_sess.query(Lesson).filter(Lesson.language_1 == int(language_filter) and Lesson.name.like(search_word) and
+                ((Lesson.who_done == current_user.id) | (Lesson.is_open == True)))
+        else:
+            lessons = db_sess.query(Lesson).filter(((Lesson.who_done == current_user.id) | (Lesson.is_open == True)) and Lesson.name.like(search_word))
     else:
-        lessons = db_sess.query(Lesson).filter(Lesson.is_open == True)
-    return render_template("index.html", lessons=lessons)
+        if language_filter != 'Все':
+            lessons = db_sess.query(Lesson).filter(Lesson.language_1 == int(language_filter) and Lesson.name.like(search_word) and Lesson.is_open == True)
+        else:
+            lessons = db_sess.query(Lesson).filter(Lesson.is_open == True and Lesson.name.like(search_word))
+    if form.validate_on_submit():
+        search_word_ = form.search_bar.data
+        if search_word_:
+            search_word_ = '%' + search_word_ + '%'
+        else:
+            search_word_ = '%'
+        return redirect('/index/' + form.language_filter.data + '/' + search_word_)
+    return render_template("index.html", form=form, lessons=lessons)
 
 
 @app.route('/lesson/<lesson_id>')
 def lesson(lesson_id):
     db_sess = db_session.create_session()
+    current_lesson = db_sess.query(Lesson).filter((Lesson.id == lesson_id)).first()
+    if not current_lesson:
+        return redirect('/')
+    if current_user.is_authenticated:
+        if not current_lesson.is_open or current_lesson.who_done == current_user.id:
+            return redirect('/')
+    else:
+        if not current_lesson.is_open:
+            return redirect('/')
     cards = db_sess.query(Card).filter((Card.lesson_id == lesson_id))
     return render_template("lesson.html", cards=cards)
 

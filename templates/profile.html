@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <a class="btn btn-warning" href="/"><--Назад</a>
     <h1>Профиль</h1>
     {% if picture != None %}
     <img src="/static/profile/{{user.picture}}">

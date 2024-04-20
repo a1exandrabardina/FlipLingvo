@@ -1,6 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div>
+  <form class="form d-flex" action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.search_bar(class="form-control", type="string") }}
+            {% for error in form.search_bar.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.language_filter.label }}
+            {{ form.language_filter}}
+            {% for error in form.language_filter.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <div>{{ message }}</div>
+    </form>
+</div>
 <h1>Список уроков</h1>
 <div class="row">
   {% for item in lessons %}
@@ -10,12 +34,18 @@
       <div class="col-sm-6">
     {% endif %}
         <div class="card w-50">
-          <div class="card-body">
-            <h5 class="card-title">{{item.name}}</h5>
-            <p class="card-text">{{item.description}}</p>
-            <a href="/lesson/{{item.id}}" class="btn btn-primary">Перейти</a>
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img src="/static/images/{{item.picture}}.png" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{item.name}}</h5>
+                <p class="card-text">{{item.description}}</p>
+                <a href="/lesson/{{item.id}}" class="btn btn-primary">Перейти</a>
+              </div>
+            </div>
           </div>
-          <img src="/static/images/{{item.picture}}.png" class="card-img-bottom" alt="...">
         </div>
       </div>
   {% endfor %}
