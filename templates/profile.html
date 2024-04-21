@@ -3,15 +3,74 @@
 {% block content %}
     <a class="btn btn-warning" href="/"><--Назад</a>
     <h1>Профиль</h1>
-    {% if picture != None %}
-    <img src="/static/profile/{{user.picture}}">
-    {% else %}
-    <img src="/static/profile/default.jpg">
-    {% endif %}
-    <div class="alert alert-primary w-50" role="alert">Имя пользователя: {{user.name}}</div>
-    <div class="alert alert-primary w-50" role="alert">Email: {{user.email}}</div>
-    <div class="alert alert-primary w-50" role="alert">О пользователе: {{user.about}}</div>
-    <a class="btn btn-primary" href="/changingpassword">Смена Пароля</a>
-    <a class="btn btn-primary" href="/changingimage">Смена Изображения</a>
-    <a class="btn btn-danger" href="/logout">Выйти</a>
+    <div class="row">
+        <div class="col">
+            {% if picture != None %}
+            <img src="/static/profile/{{user.picture}}" width="300" height="400">
+            {% else %}
+            <img src="/static/profile/default.jpg">
+            {% endif %}
+            <div class="alert alert-primary w-50" role="alert">Имя пользователя: {{user.name}}</div>
+            <div class="alert alert-primary w-50" role="alert">Email: {{user.email}}</div>
+            <div class="alert alert-primary w-50" role="alert">О пользователе: {{user.about}}</div>
+            <a class="btn btn-primary" href="/changingpassword">Смена Пароля</a>
+            <a class="btn btn-primary" href="/changingimage">Смена Изображения</a>
+            <a class="btn btn-danger" href="/logout">Выйти</a>
+        </div>
+        <div class="col">
+            <div>
+                <form class="form d-flex" action="" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="row">
+                       <div class="col">
+                            {{ form.search_bar.label }}
+                       </div>
+                       <div class="col">
+                            {{ form.search_bar(class="form-control", type="string", value=search_word) }}
+                            {% for error in form.search_bar.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                       </div>
+                       <div class="col">
+                            {{ form.language_filter.label }}
+                       </div>
+                       <div class="col">
+                            {{ form.language_filter}}
+                            {% for error in form.language_filter.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                       </div>
+                       <div class="col">
+                            {{ form.submit(type="submit", class="btn btn-primary") }}
+                            <div>{{ message }}</div>
+                       </div>
+                    </div>
+                </form>
+            </div>
+            <h1>Список уроков</h1>
+            <div class="row">
+              {% for item in lessons %}
+                {% if loop.first %}
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+                {% else %}
+                  <div class="col-sm-6">
+                {% endif %}
+                    <div class="card w-75" id = {{item.picture}} >
+                          <div class="card-body">
+                            <h5 class="card-title">{{item.name}}</h5>
+                            <p class="card-text">{{item.description}}</p>
+                            <a href="/lesson/{{item.id}}" class="btn btn-primary">Перейти</a>
+                            <a href="/editlesson/{{item.id}}" class="btn btn-primary">Редактировать</a>
+                          </div>
+                    </div>
+                  </div>
+              {% endfor %}
+            </div>
+            <a href="/createlesson" class="btn btn-info">Создать новую</a>
+        </div>
+    </div>
 {% endblock %}

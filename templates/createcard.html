@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <a class="btn btn-warning" href="/"><--Назад</a>
+    <h1>Создание Новой Карточки</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.word.label }}<br>
+            {{ form.word(class="form-control", type="string") }}<br>
+            {% for error in form.word.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.definition.label }}<br>
+            {{ form.definition(class="form-control", type="string") }}<br>
+            {% for error in form.definition.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.translate.label }}<br>
+            {{ form.translate(class="form-control", type="string") }}<br>
+            {% for error in form.translate.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <div>{{ message }}</div>
+    </form>
+{% endblock %}

@@ -7,3 +7,4 @@ class Language(SqlAlchemyBase):
     __tablename__ = 'languages'
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    lang_code = sqlalchemy.Column(sqlalchemy.String, nullable=True)

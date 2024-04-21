@@ -7,16 +7,31 @@
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <link rel="stylesheet"
-          href="C:/Users/dingo/PycharmProjects/REALPROJECT/templates/styles.css">
     <title>{{title}}</title>
+    <style>body {background-color: #5ccdc9}</style>
+    <style>header {background-color: #0776A0}</style>
+    <style>#red {background-color: red}</style>
+    <style>#orange {background-color: orange}</style>
+    <style>#yellow {background-color: yellow}</style>
+    <style>#lime {background-color: lime}</style>
+    <style>#green {background-color: green}</style>
+    <style>#turquoise {background-color: turquoise}</style>
+    <style>#light-blue {background-color: #38B2CE}</style>
+    <style>#blue {background-color: blue}</style>
+    <style>#violet {background-color: violet}</style>
+    <style>#pink {background-color: pink}</style>
 </head>
-<body bgcolor="#FF00FF" background="C:/Users/dingo/PycharmProjects/REALPROJECT/images/fone.jpeg">
+<body>
 <header>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-light">
         <a class="navbar-brand" href="#">FlipLingvo</a>
         {% if current_user.is_authenticated %}
-            <a class="navbar-brand" href="/profile">{{ current_user.name }}</a>
+        <div>
+            <a class="navbar-brand" href="/profile">
+            <img src="/static/profile/default.png" class="img-fluid rounded-start" alt="..." width="50" height="50">
+            {{ current_user.name }}
+            </a>
+        </div>
         {% else %}
             <p>
                 <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
@@ -25,9 +40,12 @@
         {% endif %}
     </nav>
 </header>
-<!-- Begin page content -->
-<main role="main" class="container">
-    {% block content %}{% endblock %}
-</main>
+</div>
+<div>
+<!-- Begin page content-->
+    <main role="main" class="container">
+        {% block content %}{% endblock %}
+    </main>
+</div>
 </body>
 </html>
