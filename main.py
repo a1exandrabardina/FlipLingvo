@@ -244,7 +244,7 @@ def create_card(lesson_id):
         db_sess.add(new_card)
         db_sess.commit()
         return redirect('/editlesson/' + str(lesson_id))
-    return render_template('createcard.html', title='Создание новой карточки', form=form)
+    return render_template('createcard.html', title='Создание новой карточки', form=form, lesson_id=lesson_id)
 
 
 @app.route('/editlesson/<lesson_id>/<change_status>/<delete_card>/<delete_lesson>')
@@ -278,6 +278,21 @@ def editlesson(lesson_id, change_status, delete_card, delete_lesson):
 def logout():
     logout_user()
     return redirect("/")
+
+
+@app.route('/offer_transfer/<value>/<lesson_id>')
+@login_required
+def offer_transfer(value, lesson_id):
+    db_sess = db_session.create_session()
+    current_lesson = db_sess.query(Lesson).filter((Lesson.id == lesson_id)).first()
+    language_code_1 = db_sess.query(Language).filter((Language.id == current_lesson.language_1)).first().lang_code
+    language_code_2 = db_sess.query(Language).filter((Language.id == current_lesson.language_2)).first().lang_code
+    params = {'key': "dict.1.1.20240424T093710Z.39946269ddd42240.92a69939608b880f717605415856a15b9e828818",
+              "text": value, 'lang': language_code_1 + "-" + language_code_2}
+    res = requests.get("https://dictionary.yandex.net/api/v1/dicservice.json/lookup", params=params).json()
+    if res['def']:
+        return '["' + res['def'][0]['tr'][0]['text'] + '"]'
+    return '["Мы ничего не нашли :("]'
 
 
 def main():

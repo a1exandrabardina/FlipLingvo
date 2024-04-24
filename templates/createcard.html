@@ -7,7 +7,7 @@
         {{ form.hidden_tag() }}
         <p>
             {{ form.word.label }}<br>
-            {{ form.word(class="form-control", type="string") }}<br>
+            {{ form.word(class="form-control", type="string", id="word") }}<br>
             {% for error in form.word.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
@@ -16,7 +16,7 @@
         </p>
         <p>
             {{ form.definition.label }}<br>
-            {{ form.definition(class="form-control", type="string") }}<br>
+            {{ form.definition(class="form-control", type="string", id="definition") }}<br>
             {% for error in form.definition.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
@@ -25,7 +25,8 @@
         </p>
         <p>
             {{ form.translate.label }}<br>
-            {{ form.translate(class="form-control", type="string") }}<br>
+            {{ form.translate(class="form-control", type="string", id="translate") }}<br>
+            <a class="btn btn-success" onclick="offer_transfer({{lesson_id}});">Предложить перевод</a>
             {% for error in form.translate.errors %}
                 <div class="alert alert-danger" role="alert">
                     {{ error }}
@@ -35,4 +36,21 @@
         <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
         <div>{{ message }}</div>
     </form>
+
+    <script>
+        let word = document.getElementById('word');
+        let translate = document.getElementById('translate');
+
+        function offer_transfer(lesson_id)
+        {
+            value = word.value;
+            fetch('/offer_transfer/' + value + '/' + lesson_id).then(function(response)
+            {
+                response.json().then(function(data)
+                {
+                    translate.value = data;
+                });
+            });
+        }
+  </script>
 {% endblock %}
